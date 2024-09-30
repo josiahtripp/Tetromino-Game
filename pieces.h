@@ -4,6 +4,8 @@
 #define MAX_SIZE 4 // The maximum piece-grid width & height
 #define PIECES_COUNT 7 // The number of pre-defined pieces in game_pieces
 
+#include <raylib/raylib.h>
+
 /**
  * @brief Encompasses properties for each piece
  * @memberof size The size of the piece grid (length of the size of square)
@@ -12,6 +14,7 @@
  * @memberof valid_states[] The allowed states of rotation of the piece. 1 = valid, 0 = invalid
  *                          (index n = state n)
  * @memberof grid The grid/array containing the piece. 1 = block, 0 = empty
+ * @memberof The color of the piece (piece-squares)
  */
 typedef struct Piece{
 
@@ -19,6 +22,7 @@ typedef struct Piece{
     int current_state;
     int valid_states[4];
     int grid[MAX_SIZE][MAX_SIZE];
+    Color color;
 } Piece;
 
 /**
@@ -31,7 +35,7 @@ typedef struct Piece{
  * @def [5] Backwards Z piece  ("S" piece)
  * @def [6] Z piece            ("Z" piece)
  */
-Piece game_pieces[PIECES_COUNT] = {
+static Piece game_pieces[PIECES_COUNT] = {
 
     {   // Square Piece
         2,
@@ -40,7 +44,8 @@ Piece game_pieces[PIECES_COUNT] = {
         {
             {1, 1},
             {1, 1}
-        }
+        },
+        YELLOW
     },
     {   // Straight bar piece
         4,
@@ -51,7 +56,8 @@ Piece game_pieces[PIECES_COUNT] = {
             {0, 0, 0, 0},
             {1, 1, 1, 1},
             {0, 0, 0, 0}
-        }
+        },
+        SKYBLUE
     },
     {
         // T piece
@@ -61,8 +67,9 @@ Piece game_pieces[PIECES_COUNT] = {
         {
             {0, 0, 0},
             {1, 1, 1},
-            {0, 0, 0}
-        }
+            {0, 1, 0}
+        },
+        PURPLE
     },
     {   // Backwards L piece
         3,
@@ -72,7 +79,8 @@ Piece game_pieces[PIECES_COUNT] = {
             {0, 0, 0},
             {1, 1, 1},
             {0, 0, 1}
-        }
+        },
+        PINK
     },
     {   // L piece
         3,
@@ -82,7 +90,8 @@ Piece game_pieces[PIECES_COUNT] = {
             {0, 0, 0},
             {1, 1, 1},
             {1, 0, 0}
-        }
+        },
+        ORANGE
     },
     {
         // Backwards Z piece
@@ -93,7 +102,8 @@ Piece game_pieces[PIECES_COUNT] = {
             {0, 0, 0},
             {0, 1, 1},
             {1, 1, 0}
-        }
+        },
+        RED
     },
     {
         // Z piece
@@ -104,7 +114,8 @@ Piece game_pieces[PIECES_COUNT] = {
             {0, 0, 0},
             {1, 1, 0},
             {0, 1, 1}
-        }
+        },
+        GREEN
     }
 };
 
@@ -121,5 +132,15 @@ void rotate_piece_cw(Piece &piece);
  * @param piece The piece to rotate (passed by reference, modifies pieces)
  */
 void rotate_piece_ccw(Piece &piece);
+
+/**
+ * @brief Draws a piece on the screen
+ * 
+ * @param piece The piece to draw
+ * @param x The x-coordinate of the piece
+ * @param y The y-coordinate of the piece
+ * @param sqr_size The length and height of each piece-square
+ */
+void draw_piece(Piece piece, int x, int y, int sqr_size);
 
 #endif
