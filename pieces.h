@@ -124,14 +124,14 @@ static Piece game_pieces[PIECES_COUNT] = {
  * 
  * @param piece The piece to rotate (passed by reference, modifies piece)
  */
-void rotate_piece_cw(Piece &piece);
+Piece rotate_piece_cw(const Piece& piece);
 
 /**
  * @brief Rotates a piece counter-clockwise to its next value
  * 
  * @param piece The piece to rotate (passed by reference, modifies pieces)
  */
-void rotate_piece_ccw(Piece &piece);
+Piece rotate_piece_ccw(const Piece& piece);
 
 /**
  * @brief Draws a piece on the screen
@@ -141,6 +141,8 @@ void rotate_piece_ccw(Piece &piece);
  * @param y The y-coordinate of the piece
  * @param sqr_size The length and height of each piece-square
  */
-void draw_piece(Piece piece, int x, int y, int sqr_size);
+void draw_piece(const Piece& piece, int x, int y, int sqr_size);
+
+Piece new_piece();
 
 #endif

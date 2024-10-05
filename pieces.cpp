@@ -1,4 +1,5 @@
 #include "pieces.h"
+#include <raylib/raylib.h>
 
 /**
  * @brief Rotates a piece clockwise to any rotational-position
@@ -7,10 +8,10 @@
  * @param rotations The number of 90 degree rotations to apply to the piece
  *                  (must be in range [1, 3])
  */
-static void rotate_piece(Piece &piece, int rotations);
+static Piece rotate_piece(const Piece& piece, int rotations);
 
 
-void rotate_piece_cw(Piece &piece){
+Piece rotate_piece_cw(const Piece& piece){
 
     int next_state = piece.current_state; // Next rotational-state of piece.
     
@@ -22,15 +23,14 @@ void rotate_piece_cw(Piece &piece){
         }
 
         if(piece.valid_states[next_state]){ // Piece can be rotated
-
-            rotate_piece(piece, i+1); // Rotate piece
-            piece.current_state = next_state; // Update state
-            return;
+            
+            return rotate_piece(piece, i+1); // Rotate piece
         }
     }
+    return piece;
 }
 
-void rotate_piece_ccw(Piece &piece){
+Piece rotate_piece_ccw(const Piece& piece){
 
     int next_state = piece.current_state; // Next rotational-state of piece.
     
@@ -43,16 +43,15 @@ void rotate_piece_ccw(Piece &piece){
 
         if(piece.valid_states[next_state]){ // Piece can be rotated
 
-            rotate_piece(piece, 3-i); // Rotate piece
-            piece.current_state = next_state; // Update state
-            return;
+            return rotate_piece(piece, 3-i); // Rotate piece
         }
     }
+    return piece;
 }
 
-static void rotate_piece(Piece &piece, int rotations){
+static Piece rotate_piece(const Piece &piece, int rotations){
 
-    static Piece tmp_piece;
+    static Piece new_piece;
 
     switch (rotations){ // Load temporary place-holder piece
 
@@ -60,7 +59,7 @@ static void rotate_piece(Piece &piece, int rotations){
 
             for(int i = 0; i < piece.size; i++){
                 for(int j = 0; j < piece.size; j++){
-                    tmp_piece.grid[i][j] = piece.grid[piece.size - j - 1][i];
+                    new_piece.grid[i][j] = piece.grid[piece.size - j - 1][i];
                 }
             }
         break;
@@ -69,7 +68,7 @@ static void rotate_piece(Piece &piece, int rotations){
 
             for(int i = 0; i < piece.size; i++){
                 for(int j = 0; j < piece.size; j++){
-                    tmp_piece.grid[i][j] = piece.grid[piece.size - i - 1][piece.size - j - 1];
+                    new_piece.grid[i][j] = piece.grid[piece.size - i - 1][piece.size - j - 1];
                 }
             }
         break;
@@ -78,21 +77,16 @@ static void rotate_piece(Piece &piece, int rotations){
 
             for(int i = 0; i < piece.size; i++){
                 for(int j = 0; j < piece.size; j++){
-                    tmp_piece.grid[i][j] = piece.grid[j][piece.size - i - 1];
+                    new_piece.grid[i][j] = piece.grid[j][piece.size - i - 1];
                 }
             }
         break;
     }
 
-    // Propogate placeholder-grid to piece-grid
-    for(int i = 0; i < piece.size; i++){
-        for(int j = 0; j < piece.size; j++){
-            piece.grid[i][j] = tmp_piece.grid[i][j];
-        }
-    }
+    return new_piece;
 }
 
-void draw_piece(Piece piece, int x, int y, int sqr_size){
+void draw_piece(const Piece& piece, int x, int y, int sqr_size){
 
     for(int i = 0; i < piece.size; i++){
         for(int j = 0; j < piece.size; j++){
@@ -104,4 +98,9 @@ void draw_piece(Piece piece, int x, int y, int sqr_size){
             }
         }
     }
+}
+
+Piece new_piece(){
+
+    return game_pieces[GetRandomValue(0, PIECES_COUNT - 1)];
 }
